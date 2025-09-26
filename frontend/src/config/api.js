@@ -1,5 +1,8 @@
-// This will be replaced by the actual backend URL after deployment
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// Use relative URL in development, absolute in production
+const isDevelopment = import.meta.env.DEV;
+const API_BASE_URL = isDevelopment 
+  ? 'http://localhost:5000/api' 
+  : 'https://server-731g65eiq-syedimtiyaz1s-projects.vercel.app/api';
 
 export default {
   TASKS: {
@@ -10,7 +13,7 @@ export default {
   AUTH: {
     LOGIN: `${API_BASE_URL}/auth/login`,
     REGISTER: `${API_BASE_URL}/auth/register`,
-    ME: `${API_BASE_URL}/auth/me`,
+    ME: `${API_BASE_URL}/auth/profile`,
   },
   USERS: {
     BASE: `${API_BASE_URL}/users`,

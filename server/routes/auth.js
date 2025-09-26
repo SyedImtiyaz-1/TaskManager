@@ -88,6 +88,7 @@ router.post('/login', [
 
     res.json({
       message: 'Login successful',
+      valid: true,
       token,
       user: {
         id: user._id,
@@ -102,10 +103,11 @@ router.post('/login', [
   }
 });
 
-// Get current user profile
-router.get('/profile', authenticateToken, async (req, res) => {
+// Get current user profile (alias for /me for backward compatibility)
+router.get('/me', authenticateToken, async (req, res) => {
   try {
-    res.json({
+    res.json({ 
+      valid: true,
       user: {
         id: req.user._id,
         name: req.user.name,
@@ -119,7 +121,20 @@ router.get('/profile', authenticateToken, async (req, res) => {
   }
 });
 
-// Verify token
+// Legacy profile endpoint (returns user data directly)
+router.get('/profile', authenticateToken, (req, res) => {
+  res.json({ 
+    valid: true,
+    user: {
+      id: req.user._id,
+      name: req.user.name,
+      email: req.user.email,
+      role: req.user.role
+    }
+  });
+});
+
+// Verify token (kept for backward compatibility)
 router.get('/verify', authenticateToken, (req, res) => {
   res.json({ 
     valid: true, 
