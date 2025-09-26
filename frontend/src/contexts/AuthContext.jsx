@@ -37,10 +37,10 @@ export const AuthProvider = ({ children }) => {
       if (token) {
         try {
           const response = await axios.get(API.AUTH.ME);
-          if (response.data.valid && response.data.user) {
-            setUser(response.data.user);
+          if (response.data) {
+            setUser(response.data);
           } else {
-            throw new Error('Invalid token response');
+            throw new Error('Invalid user data');
           }
         } catch (error) {
           console.error('Token verification failed:', error);
@@ -58,13 +58,16 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const response = await axios.post(API.AUTH.LOGIN, { email, password });
-      const { token: newToken, user } = response.data;
+      const { token, user } = response.data;
       
-      localStorage.setItem('token', newToken);
-      setToken(newToken);
+      localStorage.setItem('token', token);
+      setToken(token);
       setUser(user);
       
-      return { success: true };
+      // Set the Authorization header for future requests
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      
+      return { success: true, user };
     } catch (error) {
       console.error('Login failed:', error);
       return { 

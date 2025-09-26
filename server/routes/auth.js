@@ -54,6 +54,20 @@ router.post('/register', [
   }
 });
 
+// Get user profile
+router.get('/profile', authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    console.error('Profile error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // Login
 router.post('/login', [
   body('email').isEmail().withMessage('Please provide a valid email'),
