@@ -55,7 +55,7 @@ A full-stack task management application built with React, Node.js, Express, and
 
 ```
 mern-task/
-├── react-task-manager/          # Frontend React app
+├── frontend/          # Frontend React app
 │   ├── src/
 │   │   ├── components/          # React components
 │   │   ├── contexts/           # React contexts (Auth, Task)
@@ -105,7 +105,7 @@ cp .env.example .env
 ### 3. Frontend Setup
 
 ```bash
-cd ../react-task-manager
+cd ../frontend
 
 # Install dependencies (already done)
 npm install
@@ -132,7 +132,7 @@ npm run dev
 
 **Terminal 2 - Frontend:**
 ```bash
-cd react-task-manager
+cd frontend
 npm run dev
 ```
 
@@ -197,7 +197,7 @@ For testing purposes, you can create accounts with these roles:
 
 ### Adding New Features
 1. Backend: Add routes in `/server/routes/`
-2. Frontend: Add components in `/react-task-manager/src/components/`
+2. Frontend: Add components in `/frontend/src/components/`
 3. Update contexts for state management
 
 ### Database Models
