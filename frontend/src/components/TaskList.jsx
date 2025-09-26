@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTask } from '../contexts/TaskContext';
 import { Search, Filter, ArrowUpDown, ChevronLeft, ChevronRight, Calendar, User, Clock, AlertCircle, CheckCircle, ArrowLeft, BarChart3, UserCheck, Eye } from 'lucide-react';
-import axios from 'axios';
+import API from '../config/api';
 
 const TaskList = () => {
   const navigate = useNavigate();
@@ -39,6 +39,7 @@ const TaskList = () => {
     fetchTasks(params);
   }, [filters, pagination.currentPage]);
 
+  // Use tasks directly from context which are already filtered and paginated by the backend
   const paginatedTasks = tasks;
 
   const handleFilterChange = (key, value) => {
@@ -47,7 +48,9 @@ const TaskList = () => {
   };
 
   const handlePageChange = (newPage) => {
-    setPagination(prev => ({ ...prev, currentPage: newPage }));
+    if (newPage >= 1 && newPage <= pagination.totalPages) {
+      setPagination(prev => ({ ...prev, currentPage: newPage }));
+    }
   };
 
   const getPriorityColor = (priority) => {

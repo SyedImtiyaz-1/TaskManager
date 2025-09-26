@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
+import API from '../config/api';
 
 const TaskContext = createContext();
 
@@ -26,7 +27,12 @@ export const TaskProvider = ({ children }) => {
     setError(null);
     try {
       const queryParams = new URLSearchParams(params);
-      const response = await axios.get(`http://localhost:5000/api/tasks?${queryParams}`);
+      const response = await axios.get(API.TASKS.BASE, {
+        params,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
       
       if (response.data.tasks) {
         setTasks(response.data.tasks);
@@ -45,7 +51,12 @@ export const TaskProvider = ({ children }) => {
   // Create task (Admin only)
   const createTask = async (taskData) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/tasks', taskData);
+      const response = await axios.post(API.TASKS.BASE, taskData, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
       setTasks(prev => [response.data, ...prev]);
       return { success: true };
     } catch (error) {
@@ -58,7 +69,12 @@ export const TaskProvider = ({ children }) => {
   // Update task
   const updateTask = async (taskId, updates) => {
     try {
-      const response = await axios.put(`http://localhost:5000/api/tasks/${taskId}`, updates);
+      const response = await axios.put(API.TASKS.BY_ID(taskId), updates, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
       setTasks(prev => prev.map(task => 
         task._id === taskId ? response.data : task
       ));
@@ -78,7 +94,11 @@ export const TaskProvider = ({ children }) => {
   // Delete task (Admin only)
   const deleteTask = async (taskId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/tasks/${taskId}`);
+      await axios.delete(API.TASKS.BY_ID(taskId), {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
       setTasks(prev => prev.filter(task => task._id !== taskId));
       return { success: true };
     } catch (error) {

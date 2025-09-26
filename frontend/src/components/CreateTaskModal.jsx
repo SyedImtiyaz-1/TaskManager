@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTask } from '../contexts/TaskContext';
 import { X, Plus } from 'lucide-react';
 import axios from 'axios';
+import API from '../config/api';
 
 const CreateTaskModal = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
@@ -20,10 +21,15 @@ const CreateTaskModal = ({ isOpen, onClose }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/users');
+        const response = await axios.get(API.USERS.BASE, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
         setUsers(response.data);
       } catch (error) {
         console.error('Failed to fetch users:', error);
+        setError('Failed to load user list. Please try again.');
       }
     };
 

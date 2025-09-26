@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTask } from '../contexts/TaskContext';
 import { ArrowLeft, Edit, Trash2, Calendar, User, Clock, AlertCircle, CheckCircle, UserCheck, BarChart3 } from 'lucide-react';
 import axios from 'axios';
+import API from '../config/api';
 
 const TaskDetails = () => {
   const { id } = useParams();
@@ -31,10 +32,15 @@ const TaskDetails = () => {
       }
       
       // If not in context, fetch from API with auth headers
-      const response = await axios.get(`http://localhost:5000/api/tasks/${id}`);
+      const response = await axios.get(API.TASKS.BY_ID(id), {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
       setTask(response.data);
     } catch (error) {
-      setError(error.response?.data?.message || 'Failed to fetch task details');
+      console.error('Error fetching task details:', error);
+      setError(error.response?.data?.message || 'Failed to fetch task details. Please try again.');
     } finally {
       setLoading(false);
     }
