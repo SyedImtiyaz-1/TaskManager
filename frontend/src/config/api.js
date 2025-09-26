@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://taskmanager-backend-pink.vercel.app/api';
+const API_BASE_URL = 'https://taskmanager-backend-favqg39nk-syedimtiyaz1s-projects.vercel.app/api';
 
 export default {
   TASKS: {
