@@ -16,64 +16,16 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/server/server.js"
+      "dest": "/server/server.js",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Authorization"
+      }
     },
     {
-      "src": "^/static/(.*)",
-      "dest": "/frontend/static/$1"
-    },
-    {
-      "src": "^/favicon.ico",
-      "dest": "/frontend/favicon.ico"
-    },
-    {
-      "src": "^/assets/(.*)",
-      "dest": "/frontend/assets/$1"
-    },
-    {
-      "src": "^/manifest.json",
-      "dest": "/frontend/manifest.json"
-    },
-    {
-      "src": "^/(.*)",
-      "dest": "/frontend/dist/index.html"
-    }
-  ],
-  "rewrites": [
-    { 
-      "source": "^/(?!api/|_next/|static/|favicon.ico|assets/|manifest.json).*$",
-      "destination": "/frontend/dist/index.html"
-    }
-  ],
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
-        }
-      ]
-    },
-    {
-      "source": "/_next/static/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    },
-    {
-      "source": "/(.*).(jpg|jpeg|png|gif|ico|svg|css|js|woff|woff2|ttf|eot|otf)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
+      "src": "/(.*)",
+      "dest": "/frontend/dist/$1"
     }
   ]
 }

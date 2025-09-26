@@ -8,10 +8,9 @@ import { Plus, LogOut, Users, BarChart3, List, Calendar, Clock, CheckCircle2 } f
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { currentUser, logout, isAdmin } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
   const { tasks, loading, error } = useTask();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-
 
   const tasksByStatus = {
     pending: tasks.filter(task => task.status === 'pending'),
@@ -80,6 +79,11 @@ const Dashboard = () => {
             </div>
 
             <div className="flex items-center space-x-3">
+              <div className="hidden md:block text-right">
+                <p className="text-sm font-medium text-black">{user?.name}</p>
+                <p className="text-xs text-gray-600">{user?.email}</p>
+              </div>
+              
               {isAdmin && (
                 <button
                   onClick={() => setIsCreateModalOpen(true)}
@@ -95,10 +99,7 @@ const Dashboard = () => {
                 className="inline-flex items-center px-3 py-2 text-sm font-medium text-black hover:bg-gray-100 border border-gray-300 transition-colors"
               >
                 <LogOut className="w-4 h-4 mr-1" />
-                <span>Sign Out</span>
-                <span className="ml-2 font-medium text-black">
-                  {currentUser?.name || 'User'}
-                </span>
+                Sign Out
               </button>
             </div>
           </div>

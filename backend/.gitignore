@@ -5,10 +5,6 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Production builds
-dist/
-build/
-
 # Environment variables
 .env
 .env.local
@@ -68,15 +64,6 @@ jspm_packages/
 .cache
 .parcel-cache
 
-# next.js build output
-.next
-
-# nuxt.js build output
-.nuxt
-
-# vuepress build output
-.vuepress/dist
-
 # Serverless directories
 .serverless
 
@@ -88,4 +75,3 @@ jspm_packages/
 
 # TernJS port file
 .tern-port
-.vercel

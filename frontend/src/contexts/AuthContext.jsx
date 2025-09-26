@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import API from '../config/api';
 
@@ -17,11 +17,6 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem('token'));
 
-  // Check if user is admin
-  const isAdmin = useMemo(() => {
-    return user?.role === 'admin';
-  }, [user]);
-
   // Configure axios defaults
   useEffect(() => {
     if (token) {
@@ -36,17 +31,16 @@ export const AuthProvider = ({ children }) => {
     const checkAuth = async () => {
       if (token) {
         try {
-          const response = await axios.get(API.AUTH.ME);
-          if (response.data) {
-            setUser(response.data);
-          } else {
-            throw new Error('Invalid user data');
-          }
+          const response = await axios.get(API.AUTH.VERIFY, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+          setUser(response.data.user);
         } catch (error) {
           console.error('Token verification failed:', error);
           localStorage.removeItem('token');
           setToken(null);
-          setUser(null);
         }
       }
       setLoading(false);
@@ -57,36 +51,43 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post(API.AUTH.LOGIN, { email, password });
-      const { token, user } = response.data;
+      const response = await axios.post(API.AUTH.LOGIN, {
+        email,
+        password
+      });
+
+      const { token: newToken, user: userData } = response.data;
       
-      localStorage.setItem('token', token);
-      setToken(token);
-      setUser(user);
+      localStorage.setItem('token', newToken);
+      setToken(newToken);
+      setUser(userData);
       
-      // Set the Authorization header for future requests
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      
-      return { success: true, user };
+      return { success: true };
     } catch (error) {
-      console.error('Login failed:', error);
-      return { 
-        success: false, 
-        error: error.response?.data?.message || 'Login failed. Please try again.' 
-      };
+      const message = error.response?.data?.message || 'Login failed';
+      return { success: false, error: message };
     }
   };
 
-  const register = async (userData) => {
+  const register = async (name, email, password, role = 'user') => {
     try {
-      await axios.post(API.AUTH.REGISTER, userData);
+      const response = await axios.post(API.AUTH.REGISTER, {
+        name,
+        email,
+        password,
+        role
+      });
+
+      const { token: newToken, user: userData } = response.data;
+      
+      localStorage.setItem('token', newToken);
+      setToken(newToken);
+      setUser(userData);
+      
       return { success: true };
     } catch (error) {
-      console.error('Registration failed:', error);
-      return { 
-        success: false, 
-        error: error.response?.data?.message || 'Registration failed. Please try again.' 
-      };
+      const message = error.response?.data?.message || 'Registration failed';
+      return { success: false, error: message };
     }
   };
 
@@ -97,23 +98,19 @@ export const AuthProvider = ({ children }) => {
     delete axios.defaults.headers.common['Authorization'];
   };
 
-  // Memoize the context value to prevent unnecessary re-renders
-  const contextValue = useMemo(() => ({
+  const value = {
     user,
-    currentUser: user, // Keep for backward compatibility
-    isAdmin: user?.role === 'admin',
     loading,
     login,
     register,
-    logout
-  }), [user, loading, token]);
-
-  if (loading) {
-    return <div>Loading...</div>; // or a proper loading spinner
-  }
+    logout,
+    isAuthenticated: !!user,
+    isAdmin: user?.role === 'admin',
+    isUser: user?.role === 'user'
+  };
 
   return (
-    <AuthContext.Provider value={contextValue}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

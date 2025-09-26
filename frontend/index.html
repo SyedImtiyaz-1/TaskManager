@@ -3,30 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="description" content="Task Manager Application" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Task Manager</title>
-    
-    <!-- Preload critical assets -->
-    <link rel="modulepreload" href="/src/main.jsx" as="script" type="module">
-    
-    <!-- Preconnect to API -->
-    <link rel="preconnect" href="https://taskmanager-api.example.com" crossorigin>
-    
-    <!-- Add to home screen for mobile -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
-    <!-- PWA support -->
-    <link rel="manifest" href="/manifest.json">
   </head>
   <body>
-    <noscript>
-      <h1>JavaScript is required to run this application</h1>
-      <p>Please enable JavaScript to continue.</p>
-    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

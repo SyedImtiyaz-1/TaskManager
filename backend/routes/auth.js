@@ -54,20 +54,6 @@ router.post('/register', [
   }
 });
 
-// Get user profile
-router.get('/profile', authenticateToken, async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id).select('-password');
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-    res.json(user);
-  } catch (error) {
-    console.error('Profile error:', error);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
 // Login
 router.post('/login', [
   body('email').isEmail().withMessage('Please provide a valid email'),
@@ -102,7 +88,6 @@ router.post('/login', [
 
     res.json({
       message: 'Login successful',
-      valid: true,
       token,
       user: {
         id: user._id,
@@ -117,11 +102,10 @@ router.post('/login', [
   }
 });
 
-// Get current user profile (alias for /me for backward compatibility)
-router.get('/me', authenticateToken, async (req, res) => {
+// Get current user profile
+router.get('/profile', authenticateToken, async (req, res) => {
   try {
-    res.json({ 
-      valid: true,
+    res.json({
       user: {
         id: req.user._id,
         name: req.user.name,
@@ -135,20 +119,7 @@ router.get('/me', authenticateToken, async (req, res) => {
   }
 });
 
-// Legacy profile endpoint (returns user data directly)
-router.get('/profile', authenticateToken, (req, res) => {
-  res.json({ 
-    valid: true,
-    user: {
-      id: req.user._id,
-      name: req.user.name,
-      email: req.user.email,
-      role: req.user.role
-    }
-  });
-});
-
-// Verify token (kept for backward compatibility)
+// Verify token
 router.get('/verify', authenticateToken, (req, res) => {
   res.json({ 
     valid: true, 
