@@ -1,15 +1,9 @@
-databases:
-  - name: taskmanager-db
-    databaseName: taskmanager
-    user: taskmanager_user
-    plan: free
-
 services:
   - type: web
     name: taskmanager-backend
     env: node
     buildCommand: cd server && npm install
-    startCommand: cd server && node server.js
+    startCommand: node server.js
     envVars:
       - key: NODE_ENV
         value: production
