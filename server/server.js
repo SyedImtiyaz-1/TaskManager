@@ -49,22 +49,31 @@ const connectDB = async () => {
       useUnifiedTopology: true,
     });
     console.log('MongoDB connected');
+    return true;
   } catch (error) {
     console.error('MongoDB connection error:', error);
     process.exit(1);
   }
 };
 
-// Start server only if not in Vercel environment
-if (process.env.VERCEL !== '1') {
-  connectDB().then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  });
-}
+// Start server
+const startServer = async () => {
+  try {
+    const isConnected = await connectDB();
+    if (isConnected) {
+      app.listen(PORT, '0.0.0.0', () => {
+        console.log(`Server is running on port ${PORT}`);
+      });
+    }
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+};
 
-// For Vercel serverless
-module.exports = app;
+// Start the server if this file is run directly (not required)
+if (process.env.NODE_ENV !== 'test') {
+  startServer();
+}
 
 export default app;

@@ -1,4 +1,5 @@
-const API_BASE_URL = 'https://taskmanager-backend-favqg39nk-syedimtiyaz1s-projects.vercel.app/api';
+// This will be replaced by the actual backend URL after deployment
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export default {
   TASKS: {
